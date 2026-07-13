@@ -1,1 +1,1 @@
-# CTF-writeup-Bronco-ctf-
+# CTF-writeup documentations
