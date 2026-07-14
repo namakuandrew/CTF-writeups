@@ -43,3 +43,17 @@ The WAF was actively stripping keywords like UNION, SELECT, ORDER, and OR.
 
 Bypassing the Filter:
 To get around the keyword stripping, we utilized SQLite's logical concatenation operator || instead of OR, and avoided explicitly banned keywords. While payloads like Nope'||(title LIKE '%bronco{%')||'1'='0 successfully bypassed the WAF, they returned blank results, indicating the flag was not stored in the standard title, author, or description columns of the public scrolls.
+
+## Phase 4: The Breakthrough
+During testing, appending a standard SQL comment (--) to truncate the query resulted in a highly specific error: incomplete input.
+
+Initially misinterpreted as an unbalanced trailing quote from the LIKE clause, this error was actually the SQLite engine complaining about an unclosed parenthesis.
+
+This completely reshaped our understanding of the backend query. It wasn't:
+SELECT * FROM scrolls WHERE title LIKE '%[INPUT]%' AND is_public = 1
+
+It was actually wrapped in logic brackets:
+SELECT * FROM scrolls WHERE (title LIKE '%[INPUT]%') AND is_secret = 0
+
+## Phase 5: The Final Exploit
+With the true structure of the backend query exposed, the final payload was crafted to break out of the parenthesis, inject our own boolean logic to query the hidden column, and comment out the rest of the developer's restrictions.
