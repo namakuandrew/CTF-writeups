@@ -57,3 +57,6 @@ SELECT * FROM scrolls WHERE (title LIKE '%[INPUT]%') AND is_secret = 0
 
 ## Phase 5: The Final Exploit
 With the true structure of the backend query exposed, the final payload was crafted to break out of the parenthesis, inject our own boolean logic to query the hidden column, and comment out the rest of the developer's restrictions.
+
+<img width="1213" height="722" alt="image" src="https://github.com/user-attachments/assets/e2864555-f072-422a-a3c2-2dd370206894" />
+
